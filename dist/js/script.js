@@ -30,6 +30,24 @@ const select = {
       linkIncrease: 'a[href="#more"]',
     },
   },
+  cart: {
+    productList: '.cart__order-summary',
+    toggleTrigger: '.cart__summary',
+    totalNumber: '.cart__total-number',
+    totalPrice: '.cart__total-price strong, .cart__order-total .cart__order-price-sum strong',
+    subtotalPrice: '.cart__order-subtotal .cart__order-price-sum strong',
+    deliveryFee: '.cart__order-delivery .cart__order-price-sum strong',
+    form: '.cart__order',
+    formSubmit: '.cart__order [type="submit"]',
+    phone: '[name="phone"]',
+    address: '[name="address"]',
+  },
+  cartProduct: {
+    amountWidget: '.widget-amount',
+    price: '.cart__product-price',
+    edit: '[href="#edit"]',
+    remove: '[href="#remove"]',
+  },
 };
 
 const classNames = {
@@ -37,14 +55,20 @@ const classNames = {
     wrapperActive: 'active',
     imageVisible: 'active',
   },
+  cart: {
+    wrapperActive: 'active',
+  },
 };
 
 const settings = {
   amountWidget: {
     defaultValue: 1,
     defaultMin: 1,
-    defaultMax: 10,
-  }
+    defaultMax: 9,
+  },
+  cart: {
+    defaultDeliveryFee: 20,
+  },
 };
 
 const templates = {
@@ -66,7 +90,7 @@ class Product {
     thisProduct.processOrder();
 
 
-    console.log('new product', thisProduct);
+
   }
 
   renderInMenu() {
@@ -101,7 +125,7 @@ class Product {
 
     /* START: add event listener to clickable trigger on event click */
     thisProduct.accordionTrigger.addEventListener('click', function (event) {
-      console.log('clicked');
+
       /* prevent default action for event */
       event.preventDefault();
       /* find active product (product that has active class) */
@@ -117,7 +141,7 @@ class Product {
 
   initOrderForm() {
     const thisProduct = this;
-    console.log(thisProduct);
+
 
     thisProduct.form.addEventListener('submit', function (event) {
       event.preventDefault();
@@ -138,11 +162,11 @@ class Product {
 
   processOrder() {
     const thisProduct = this;
-    console.log(thisProduct);
+
 
     // covert form to object structure e.g. { sauce: ['tomato'], toppings: ['olives', 'redPeppers']}
     const formData = utils.serializeFormToObject(thisProduct.form);
-    console.log('formData', formData);
+
 
     // set price to default price
     let price = thisProduct.data.price;
@@ -151,13 +175,13 @@ class Product {
     for (let paramId in thisProduct.data.params) {
       // determine param value, e.g. paramId = 'toppings', param = { label: 'Toppings', type: 'checkboxes'... }
       const param = thisProduct.data.params[paramId];
-      console.log(paramId, param);
+
 
       // for every option in this category
       for (let optionId in param.options) {
         // determine option value, e.g. optionId = 'olives', option = { label: 'Olives', price: 2, default: true }
         const option = param.options[optionId];
-        console.log(optionId, option);
+
 
         if (formData[paramId] && formData[paramId].includes(optionId)) {
           // check if the option is not default
@@ -206,8 +230,8 @@ class amountWidget {
     thisWidget.getElements(element);
     thisWidget.setValue(thisWidget.input.value);
     thisWidget.initActions();
-    // console.log('AmountWidget', thisWidget);
-    // console.log('constructors arguments', element);
+
+
   }
 
   getElements(element) {
@@ -240,14 +264,14 @@ class amountWidget {
   initActions() {
     const thisWidget = this;
 
-    thisWidget.input.addEventListener('change', function() {
+    thisWidget.input.addEventListener('change', function () {
       thisWidget.setValue(thisWidget.input.value);
     });
-    thisWidget.linkDecrease.addEventListener('click', function(event) {
+    thisWidget.linkDecrease.addEventListener('click', function (event) {
       event.preventDefault();
       thisWidget.setValue(--thisWidget.input.value);
     });
-    thisWidget.linkIncrease.addEventListener('click', function(event) {
+    thisWidget.linkIncrease.addEventListener('click', function (event) {
       event.preventDefault();
       thisWidget.setValue(++thisWidget.input.value);
     });
@@ -261,30 +285,30 @@ class amountWidget {
   }
 }
 
-class Cart{
-  constructor(element){
+class Cart {
+  constructor(element) {
     const thisCart = this;
     thisCart.products = [];
     thisCart.getElements(element);
-    console.log('new Cart', thisCart);
+
     thisCart.initAction();
   }
-  getElements(element){
+  getElements(element) {
     const thisCart = this;
 
     thisCart.dom = {};
     thisCart.dom.wrapper = element;
     thisCart.dom.toggleTrigger = thisCart.dom.wrapper.querySelector(select.cart.toggleTrigger);
   }
-  initAction(){
+  initAction() {
     const thisCart = this;
 
-    thisCart.dom.toggleTrigger.addEventListener('click', function(event) {
+    thisCart.dom.toggleTrigger.addEventListener('click', function (event) {
       event.preventDefault();
       //thisCart.dom.wrapper.toggle(classNames.cart.wrapperActive);
       //thisCart.dom.wrapper.classList.toggle('active');
       thisCart.dom.wrapper.classList.toggle(classNames.cart.wrapperActive);
-    })
+    });
   }
 }
 
@@ -293,7 +317,7 @@ const app = {
   initMenu: function () {
     const thisApp = this;
 
-    console.log('thisApp.data:', thisApp.data);
+
 
     for (let productData in thisApp.data.products) {
       new Product(productData, thisApp.data.products[productData]);
@@ -303,24 +327,21 @@ const app = {
   initData: function () {
     const thisApp = this;
     thisApp.data = dataSource;
-    console.log('thisApp:', thisApp);
+
   },
 
   init: function () {
     const thisApp = this;
-    console.log('*** App starting ***');
-    console.log('thisApp:', thisApp);
-    console.log('classNames:', classNames);
-    console.log('settings:', settings);
-    console.log('templates:', templates);
+
 
     thisApp.initData();
     thisApp.initMenu();
+    thisApp.initCart();
   },
 
-  initCart: function(){
+  initCart: function () {
     const thisApp = this;
-    
+
     const cartElem = document.querySelector(select.containerOf.cart);
     thisApp.cart = new Cart(cartElem);
   },

@@ -73,6 +73,7 @@ const settings = {
 
 const templates = {
   menuProduct: Handlebars.compile(document.querySelector(select.templateOf.menuProduct).innerHTML),
+  //cartProduct: Handlebars.compile(document.querySelector(select.templateOf.cartProduct).innerHTML),
 };
 
 class Product {
@@ -88,14 +89,10 @@ class Product {
     thisProduct.initOrderForm();
     thisProduct.initAmountWidget();
     thisProduct.processOrder();
-
-
-
   }
 
   renderInMenu() {
     const thisProduct = this;
-
     /* geneate HTML based on template */
     const generatedHTML = templates.menuProduct(thisProduct.data);
     /* create element using utils.createElementFromHTML */
@@ -120,12 +117,9 @@ class Product {
 
   initAccordion() {
     const thisProduct = this;
-
     /* find the clickable trigger (the element that should react to clicking) */
-
     /* START: add event listener to clickable trigger on event click */
     thisProduct.accordionTrigger.addEventListener('click', function (event) {
-
       /* prevent default action for event */
       event.preventDefault();
       /* find active product (product that has active class) */
@@ -142,7 +136,6 @@ class Product {
   initOrderForm() {
     const thisProduct = this;
 
-
     thisProduct.form.addEventListener('submit', function (event) {
       event.preventDefault();
       thisProduct.processOrder();
@@ -157,32 +150,24 @@ class Product {
     thisProduct.cartButton.addEventListener('click', function (event) {
       event.preventDefault();
       thisProduct.processOrder();
+      thisProduct.addToCard();
     });
   }
 
   processOrder() {
     const thisProduct = this;
-
-
     // covert form to object structure e.g. { sauce: ['tomato'], toppings: ['olives', 'redPeppers']}
     const formData = utils.serializeFormToObject(thisProduct.form);
-
-
     // set price to default price
     let price = thisProduct.data.price;
-
     // for every category (param)...
     for (let paramId in thisProduct.data.params) {
       // determine param value, e.g. paramId = 'toppings', param = { label: 'Toppings', type: 'checkboxes'... }
       const param = thisProduct.data.params[paramId];
-
-
       // for every option in this category
       for (let optionId in param.options) {
         // determine option value, e.g. optionId = 'olives', option = { label: 'Olives', price: 2, default: true }
         const option = param.options[optionId];
-
-
         if (formData[paramId] && formData[paramId].includes(optionId)) {
           // check if the option is not default
           if (!option.default) {
@@ -207,11 +192,10 @@ class Product {
         }
       }
     }
-
     /* multiply price by amont */
     price *= thisProduct.amountWidget.value;
     // update calculated price in the HTML
-    thisProduct.priceElem.innerHTML = price;
+
   }
 
   initAmountWidget() {
@@ -220,6 +204,22 @@ class Product {
     thisProduct.amountWidget = new amountWidget(thisProduct.amountWidgetElem);
 
     thisProduct.amountWidgetElem.addEventListener('update', function () { thisProduct.processOrder(); });
+  }
+  addToCard() {
+    const thisProduct = this;
+
+    app.cart.add(thisProduct);
+  }
+
+  prepareCartProduct() {
+    const thisProduct = this;
+
+    const productSummary = {}
+    productSummary.id = thisProduct.data.id;
+    productSummary.name = thisProduct.data.name;
+    productSummary.amount = parseInt(thisProduct.amountWidget.value);
+
+
   }
 }
 
@@ -305,13 +305,15 @@ class Cart {
 
     thisCart.dom.toggleTrigger.addEventListener('click', function (event) {
       event.preventDefault();
-      //thisCart.dom.wrapper.toggle(classNames.cart.wrapperActive);
-      //thisCart.dom.wrapper.classList.toggle('active');
       thisCart.dom.wrapper.classList.toggle(classNames.cart.wrapperActive);
     });
   }
-}
+  add(menuProduct) {
+    //const thisCard = this;
 
+    console.log('adding product', menuProduct);
+  }
+}
 
 const app = {
   initMenu: function () {

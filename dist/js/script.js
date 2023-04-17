@@ -35,7 +35,7 @@ const select = {
   cart: {
     productList: '.cart__order-summary',
     toggleTrigger: '.cart__summary',
-    totalNumber: `.cart__total-number`,
+    totalNumber: '.cart__total-number',
     totalPrice: '.cart__total-price strong, .cart__order-total .cart__order-price-sum strong',
     subtotalPrice: '.cart__order-subtotal .cart__order-price-sum strong',
     deliveryFee: '.cart__order-delivery .cart__order-price-sum strong',
@@ -96,6 +96,9 @@ class Product {
     thisProduct.initOrderForm();
     thisProduct.initAmountWidget();
     thisProduct.processOrder();
+    thisProduct.addToCard();
+    thisProduct.prepareCartProduct();
+    thisProduct.prepareCartProductParams();
   }
 
   renderInMenu() {
@@ -335,6 +338,7 @@ class Cart {
     thisCart.getElements(element);
 
     thisCart.initAction();
+    thisCart.add();
   }
   getElements(element) {
     const thisCart = this;
@@ -353,16 +357,20 @@ class Cart {
     });
   }
   add(menuProduct) {
-    const thisCard = this;
+    const thisCart = this;
 
-    const geneatedHTML = templates.cartProduct(thisCard.data);
-    const cardDom = utils.createDOMFromHTML(geneatedHTML);
+    const geneatedHTML = templates.cartProduct(thisCart.data);
+    const cartDom = utils.createDOMFromHTML(geneatedHTML);
 
-    thisCard.dom.productList.appendChild(cardDom);
+    thisCart.dom.productList.appendChild(cartDom);
 
     console.log('adding product', menuProduct);
+    thisCart.products.push(menuProduct);
+    console.log('thisCart.products', thisCart.products);
+    
   }
 }
+
 
 const app = {
   initMenu: function () {

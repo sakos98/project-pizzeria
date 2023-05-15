@@ -107,7 +107,6 @@ class Cart {
       payload.products.push(prod.getData());
     }
 
-
     const options = {
       method: 'POST',
       headers: {
@@ -124,5 +123,4 @@ class Cart {
       });
   }
 }
-
 export default Cart;

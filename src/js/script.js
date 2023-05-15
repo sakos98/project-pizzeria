@@ -77,7 +77,7 @@ const settings = {
   },
   // CODE ADDED END
   db: {
-    url: 'https://3131-sakos98-projectpizzeria-k27zbncgprs.ws-eu96.gitpod.io',
+    url: 'http://localhost:3131',
     products: 'products',
     orders: 'orders',
   },
@@ -236,7 +236,6 @@ class Product {
 
   addToCard() {
     const thisProduct = this;
-    console.log(app);
 
 
     const event = new CustomEvent('add-to-cart', {
@@ -318,6 +317,14 @@ class amountWidget {
     thisWidget.announce();
   }
 
+  announce() {
+    const thisWidget = this;
+    const event = new CustomEvent('updated', {
+      bubbles: true
+    });
+    thisWidget.element.dispatchEvent(event);
+  }
+
   initActions() {
     const thisWidget = this;
 
@@ -333,14 +340,6 @@ class amountWidget {
       thisWidget.setValue(++thisWidget.input.value);
     });
   }
-  
-  announce() {
-    const thisWidget = this;
-    const event = new CustomEvent('updated', {
-      bubbles: true
-    });
-    thisWidget.element.dispatchEvent(event);
-  } 
 }
 
 class Cart{
@@ -367,13 +366,11 @@ class Cart{
     thisCart.dom.address = document.querySelector(select.cart.address);
     thisCart.dom.phone = document.querySelector(select.cart.phone);
   }
+
   initActions(){
     const thisCart = this;
     thisCart.dom.toggleTrigger.addEventListener('click', function(){
       thisCart.dom.wrapper.classList.toggle(classNames.cart.wrapperActive);
-    });
-    thisCart.dom.productList.addEventListener('updated', function(){
-      thisCart.update();
     });
     thisCart.dom.productList.addEventListener('remove', function(event){
       thisCart.remove(event.detail.cartProduct);
@@ -382,7 +379,11 @@ class Cart{
       event.preventDefault();
       thisCart.sendOrder();
     });
+    thisCart.dom.productList.addEventListener('updated', function(){
+      thisCart.update();
+    });
   }
+
   add(menuProduct){
     const thisCart = this;
 
@@ -414,8 +415,8 @@ class Cart{
     thisCart.totalPrice = thisCart.subtotalPrice + thisCart.deliveryFee;
     thisCart.dom.subtotalPrice.innerHTML = thisCart.subtotalPrice;
     thisCart.dom.totalNumber.innerHTML = thisCart.totalNumber;
-    for (let element of thisCart.dom.totalPrice){
-      element.innerHTML = thisCart.totalPrice;
+    for (let price of thisCart.dom.totalPrice){
+      price.innerHTML = thisCart.totalPrice;
     }
   }
   remove(object){
@@ -442,11 +443,10 @@ class Cart{
       products: [],
     };
 
-    console.log('senOrder: ', payload.address);
-
     for(let prod of thisCart.products) {
       payload.products.push(prod.getData());
     }
+  
 
     const options = {
       method: 'POST',
@@ -464,12 +464,12 @@ class Cart{
       });
   }
 }
+
 class CartProduct {
   constructor(menuProduct, element) {
     const thisCartProduct = this;
 
     thisCartProduct.id = menuProduct.id;
-    console.log(menuProduct);
     thisCartProduct.name = menuProduct.name;
     thisCartProduct.amount = menuProduct.amount;
     thisCartProduct.priceSingle = menuProduct.priceSingle;
@@ -478,7 +478,6 @@ class CartProduct {
 
     thisCartProduct.getElements(element);
     thisCartProduct.initAction();
-    console.log(thisCartProduct);
   }
 
   getElements(element) {
@@ -530,6 +529,21 @@ class CartProduct {
       thisCartProduct.remove();
     });
   }
+
+  getData(){
+    const thisCartProduct = this;
+
+    const productCartSummary = {
+      id: thisCartProduct.id,
+      amount: thisCartProduct.amount,
+      price: thisCartProduct.price,
+      priceSingle: thisCartProduct.priceSingle,
+      name: thisCartProduct.name,
+      params: thisCartProduct.params,
+    };
+
+    return (productCartSummary);
+  }
 }
 
 
@@ -554,14 +568,11 @@ const app = {
         return rawResponse.json();
       })
       .then(function (parseResponse) {
-        console.log('parsedResponse', parseResponse);
 
         /* save parseResponse as thisApp.data.products */
         thisApp.data.products = parseResponse;
         /* execute initMenu method */
         thisApp.initMenu();
-        console.log('thisApp.data', thisApp.data);
-
       });
    
 
@@ -581,13 +592,13 @@ const app = {
 
     const cartElem = document.querySelector(select.containerOf.cart);
     thisApp.cart = new Cart(cartElem);
-    console.log(thisApp);
 
     thisApp.productList = document.querySelector(select.containerOf.menu);
 
     thisApp.productList.addEventListener('add-to-cart', function(event){
       app.cart.add(event.detail.product);
     });
-  }
+  },
 };
+
 app.init();

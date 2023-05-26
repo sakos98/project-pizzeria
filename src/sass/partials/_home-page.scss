@@ -1,0 +1,225 @@
+.h1 {
+  font-family: $font-header;
+  font-size: 26px;
+  font-weight: $font-semibold;
+  text-transform: uppercase;
+}
+
+.h2 {
+  font-size: 14px;
+  font-weight: $font-bold;
+  text-transform: uppercase;
+}
+
+.h3 {
+  font-size: 12px;
+  font-weight: $font-bold;
+  text-transform: uppercase;
+}
+
+.home {
+  background-color: white;
+  margin-top: 50px;
+  margin-left: 300px;
+  margin-right: 300px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  height: 100%;
+}
+
+.online-order-box {
+  position: relative;
+  height: 200px;
+  width: 100%;
+  padding-top: 100px;
+}
+
+.online-order-box-background, .order-online  {
+  position: absolute;
+  width: 100%;
+  height: 200px;
+  background: url("../images/home-page/pizza-1.jpg") no-repeat center;
+  background-size: cover;
+}
+
+.online-order-box-background, .book-table  {
+  position: absolute;
+  width: 100%;
+  height: 200px;
+  background: url("../images/home-page/pizza-2.jpg") no-repeat center;
+  background-size: cover;
+}
+
+.online-order-box-background, .opennig-hours  {
+  position: absolute;
+  width: 100%;
+  height: 200px;
+  background-color: rgb(255, 99, 99);
+}
+
+.online-order-box-position-openning-hour {
+  padding-top: 25px;
+}
+
+
+.online-order-box-paragraph {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  position: absolute;
+  color: white;
+  font-weight: 600;
+  font-size: 30px;
+  font-family: 'Roboto', sans-serif;
+  letter-spacing: -2px;
+}
+
+.online-order-box-paragraph .days {
+  font-weight: 300;
+  font-size: 15px;
+  font-family: 'Roboto', sans-serif;
+  letter-spacing: 0px;
+}
+
+/* Carusel */
+.main {
+  height: 300px;
+  width: 100%;
+}
+
+.carusel {
+  padding-top: 200px;
+  padding-bottom: 150px;
+}
+
+.about-description {
+  height: 400px;
+  width: 100%;
+}
+
+.right-about {
+  width: 100%;
+  padding-top: 100px;
+}
+
+.img-about img{
+  width: 100%;
+  height: 200px;
+}
+
+.text-about-person {
+  height: 400px;
+  text-align: left;
+  padding-left: 50px;
+}
+
+.p-about {
+  font-size: 25px;
+  font-family: 'Roboto', sans-serif;
+  padding-left: 100px;
+}
+
+.title-carusel {
+  font-weight: bold;
+}
+
+// Team
+.team {
+  height: 850px;
+}
+
+.team-description-title {
+  font-size: 50px;
+  font-weight: 100;
+}
+
+.team-paragraph {
+  padding-top: 25px;
+  font-size: 12px;
+}
+
+.team-description-position {
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+
+.team-image-position {
+  padding: auto;
+  margin: auto;
+}
+
+.team-image img {
+  width: 100%;
+  height: 250px;
+  background-size: cover;
+}
+
+.second-row {
+  padding-top: 20px;
+}
+
+// Hover img
+.team-image {
+  position: relative;
+  width: 100%;
+}
+
+.image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  transition: .5s ease;
+  // opacity: 0.1;
+}
+
+.team-image:hover .overlay {
+  opacity: 1;
+}
+
+.text {
+  color: rgb(255, 255, 255);
+  font-size: 30px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  text-align: center;
+  font-weight: bold;
+  letter-spacing: 10px;
+  display: flex;
+  flex-direction: row;
+}
+
+.heart:hover {
+  color: red;
+}
+
+.share:hover {
+  color: red;
+}
+
+// link
+.link-description {
+  display: flex;
+  justify-content: flex-start;
+  padding-top: 50px;
+  padding-bottom: 100px;
+  
+  a {
+    color: red;
+  }
+}

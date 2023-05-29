@@ -146,11 +146,47 @@ class Booking {
       if (
         !allAvailable
         &&
-        thisBooking.booked[thisBooking.date][thisBooking.hour].includes(tableId) > -1
+        thisBooking.booked[thisBooking.date][thisBooking.hour].includes(tableId)
       ) {
         table.classList.add(classNames.booking.tableBooked);
       } else {
         table.classList.remove(classNames.booking.tableBooked);
+      }
+    }
+  }
+
+  initTables(event) {
+    const thisBooking = this;
+
+    const clickedElement = event.target;
+
+    const selectedId = clickedElement.getAttribute(settings.booking.tableIdAttribute);
+
+    // if clicked element is a table
+    if (clickedElement.classList.contains('table')) {
+      // check if table is booked alert user
+      if (clickedElement.classList.contains('booked')) {
+        alert('This table is already booked');
+      } 
+      // if table is not booked 
+      // if it is selected remove selected class
+      else if (clickedElement.classList.contains(classNames.booking.tableSelected)){
+        clickedElement.classList.remove(classNames.booking.tableSelected);
+        thisBooking.selectedTable = null;
+        //console.log('remove from thisBooking.selectedTable', thisBooking.selectedTable);
+      }
+      else {
+        // remove selected class from other tables
+        for(let table of thisBooking.dom.tables){
+          table.classList.remove(classNames.booking.tableSelected);
+          //console.log('removed class selected from all tables');
+
+        }
+        // if table is not selected add selected class
+
+        clickedElement.classList.add(classNames.booking.tableSelected);
+        thisBooking.selectedTable = selectedId;
+        //console.log('added to thisBooking.selectedTable', thisBooking.selectedTable);
       }
     }
   }
@@ -168,6 +204,8 @@ class Booking {
     thisBooking.dom.datePicker = document.querySelector(select.widgets.datePicker.wrapper);
     thisBooking.dom.hourPicker = document.querySelector(select.widgets.hourPicker.wrapper);
     thisBooking.dom.tables = document.querySelectorAll(select.booking.tables);
+
+    thisBooking.dom.tablesWrapper = document.querySelector(select.containerOf.tables);
   }
 
   initWidgets() {
@@ -179,6 +217,9 @@ class Booking {
 
     thisBooking.dom.wrapper.addEventListener('updated', function () {
       thisBooking.updateDom();
+    });
+    thisBooking.dom.tablesWrapper.addEventListener('click', function(event){
+      thisBooking.initTables(event);
     });
   }
 
